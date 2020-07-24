@@ -1,6 +1,8 @@
 #NAORobotAssistant
 Integrating Google Assistant into NAO Robot
 
+These are working notes and will be revised as I go.
+
 Setting up NAO VM:
 
 1.  Install VirtualBox, or your prefered virtual machine environment, I will
