@@ -1,14 +1,11 @@
 #NAORobotAssistant
 Integrating Google Assistant into NAO Robot
 
-<<<<<<< HEAD
 Week of 7-06-2020 - 7-12-2020:
-=======
+
 These are working notes and will be revised as I go.
 
 Setting up NAO VM:
->>>>>>> 9287764a2f1e078fc2b6d8ff2c7684b169ab4a0f
-
     - Set up NAO virtual OS
     - Researched how to upgrade the kernel without damaging NAO functionality.
 
