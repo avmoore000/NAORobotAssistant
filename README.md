@@ -18,3 +18,8 @@ Week of 7-20-2020 - 7-26-2020
     - Enabled PulseAudio and audio passthrough in VM
     - Installed and tested Google Assistant using Python 2.7
     - Wrote a shell script to automate the setup process.
+
+Week of 7-27-2020 - 8-202020
+
+    -  Worked on solving issue with shell script formatting.
+    -  Started to troubleshoot sound card issues with google assistant
