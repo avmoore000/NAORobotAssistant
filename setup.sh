@@ -1,32 +1,29 @@
 # setup.sh
 # Written by Andrew Moore
 # Created: 07-25-2020
-# Modified: 07-25-2020
+# Modified: 08-09-2020
 
 # This script will configure the NAO operating system and allow it
 # to use Python 2.7.  Please note that as of this writing
 # Python 2.7 is deprecated, this script is for proof of concept
-# only.
+# only
 
-# Install portaudio to avoid issues later on
-sudo emerge portaudio
-
-# Grab the newest ebuilds
-sudo emerge --sync
-
-# Create the new directories for the repository
+# Make a directory for the repository tree
 sudo mkdir /var/db/repos
 sudo mkdir /var/db/repos/gentoo
 
-# Create a new partition on the device added to VM
+# Create a new partition on the device added to the VM
 (
 echo n
 echo p
 echo 1
 echo
 echo
+echo p
 echo w
 ) | sudo fdisk /dev/sdc
+
+sleep 5
 
 # Create a filesystem on the new partition
 sudo mke2fs -t ext3 /dev/sdc1
@@ -34,12 +31,25 @@ sudo mke2fs -t ext3 /dev/sdc1
 # Mount the new filesystem
 sudo mount /dev/sdc1 /var/db/repos/gentoo
 
-# Update the portage tool to the latest version
+# Add the new partition to the mount order
+sudo sed -i '$ /dev/sdc1	/var/db/repos/gentoo	ext3	defaults,rw	0	0' /etc/fstab
+
+# Install portaudio to avoid issues later on
+sudo emerge portaudio
+
+# Update portage to newer version
 tar --extract --gz --verbose --file portage-portage-2.3.103.tar.gz
-sudo python portage-portage-2.3.103/setup.py install
+cd portage-portage-2.3.103
+sudo python setup.py install
+cd /home/nao
+
+# Grab the newest ebuilds
+sudo emerge --sync
 
 # Update the portage tree to enable package installation
 sudo emerge-webrsync
+
+sleep 5
 
 # Set the profile to a valid selection
 sudo eselect profile --set 1
@@ -86,13 +96,13 @@ cd ..
 
 # oauthlib
 tar --extract --gz --verbose --file oauthlib-3.1.0.tar.gz
-cd oautlib-3.1.0
+cd oauthlib-3.1.0
 sudo python setup.py install
 cd ..
 
 # request-oauthlib
 tar --extract --gz --verbose --file requests-oauthlib-1.3.0.tar.gz
-cd requests-oautlib-1.3.0
+cd requests-oauthlib-1.3.0
 sudo python setup.py install
 cd ..
 
