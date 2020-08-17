@@ -31,3 +31,9 @@ Week of 8-3-2020 - 8-9-2020
     -  Continued to troubleshoot cause of sound capture errors
 
         -  I've narrowed this down to a few missing packages, am currently searching for them to resolve the issue.
+
+Week of 8-10-2020 - 8-16-2020
+
+    -  Fixed the microphone issue with OpenNAO vm
+    -  Began testing audio input using arecord and google assistant audio test funciton
+    -  Began investigating sound output volume issue
