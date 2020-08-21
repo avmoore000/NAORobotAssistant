@@ -8,73 +8,37 @@
 # Python 2.7 is deprecated, this script is for proof of concept
 # only
 
-# Make a directory for the repository tree
-sudo mkdir /var/db/repos
-sudo mkdir /var/db/repos/gentoo
-
-# Create a new partition on the device added to the VM
-(
-echo n
-echo p
-echo 1
-echo
-echo
-echo p
-echo w
-) | sudo fdisk /dev/sdc
-
-sleep 5
-
-# Create a filesystem on the new partition
-sudo mke2fs -t ext3 /dev/sdc1
-
-# Mount the new filesystem
-sudo mount /dev/sdc1 /var/db/repos/gentoo
-
-# Add the new partition to the mount order
-sudo sed -i '$ /dev/sdc1	/var/db/repos/gentoo	ext3	defaults,rw	0	0' /etc/fstab
-
 # Install portaudio to avoid issues later on
 sudo emerge portaudio
 
-# Update portage to newer version
-tar --extract --gz --verbose --file portage-portage-2.3.103.tar.gz
-cd portage-portage-2.3.103
-sudo python setup.py install
-cd /home/nao
+# Install OSS modules
+sudo emerge alsa-oss
 
-# Grab the newest ebuilds
-sudo emerge --sync
+# Enable pulseaudio to use OSS module
+sudo sed -i '$ a load_module module_oss' /etc/pulse/default.pa  
 
-# Update the portage tree to enable package installation
-sudo emerge-webrsync
-
-sleep 5
-
-# Set the profile to a valid selection
-sudo eselect profile --set 1
-
-# Correct the destinaiton of make.profile
-sudo rm /etc/make.profile
-sudo ln -s /usr/portage/profiles/default/linux/x86/17.0 /etc/make.profile
-
-# Restart sshd service
-sudo rc-service sshd restart
-
-# Add a rule to iptables to allow ssh connections (enables scp)
-sudo iptables -A INPUT -p tcp --dport ssh -j ACCEPT
-
-# Enable OSS in PulseAudio
-sudo sed -i '$ a load_module module_oss' /etc/pulse/default.pa
-
-# Unzip the Packages directory and do some housekeeping
+# Unzip the packages to be installed and do some housekeeping
 unzip Packages.zip
-rm -rf __MACOSX
-sudo rm -rf portage-portage-2.3.103
+rm -rf __MACOSX 
+cd /home/nao/Packages
 
 # Set up the audio requirements for Google Assistant
 
-cd Packages
+# New alsa-lib
+tar --extract --file alsa-lib-1.2.3.2.tar.bz2
+cd alsa-lib-1.2.3.2
+./configure
+make
+sudo make install
+cd /home/nao/Packages
+
+# Install alsa-utils
+tar --extract --file alsa-utils-1.2.3.tar.bz2
+cd alsa-utils-1.2.3
+./configure
+make
+sudo make install
+cd /home/nao/Packages
 
 # pycparser
 tar --extract --gz --verbose --file pycparser-2.20.tar.gz
@@ -133,9 +97,13 @@ tar --extract --gz --verbose --file google-assistant-sdk-0.6.0.tar.gz
 cd google-assistant-sdk-0.6.0
 touch googlesamples/assistant/grpc/requirements.txt
 sudo python setup.py install
-cd ../..
+cd /home/nao
+
+# fix pulse audio
+pacmd set-default-sink "auto_null"
+pacmd set-default-source "auto_null.monitor"
 
 # Clean up installation files
 sudo rm -rf Packages
 rm Packages.zip
-
+rm setup.sh

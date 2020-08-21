@@ -37,3 +37,11 @@ Week of 8-10-2020 - 8-16-2020
     -  Fixed the microphone issue with OpenNAO vm
     -  Began testing audio input using arecord and google assistant audio test funciton
     -  Began investigating sound output volume issue
+
+Week of 8-17-2020 - 8-23-2020
+
+    -  Finalized the write up for the summer work on this project
+    -  Created a virtual machine that contains the accumulated work for the Summer II semester
+    -  Compiled a report listing the steps taken for Summer II semester, as well as listing next steps
+
+
